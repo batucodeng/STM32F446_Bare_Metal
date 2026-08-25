@@ -2,4 +2,6 @@
 ../Src/main.c:46:6:usart2_tx_init	1
 ../Src/main.c:65:6:usart2_write_char	2
 ../Src/main.c:75:6:usart2_print	2
-../Src/main.c:84:5:main	1
+../Src/main.c:83:5:__io_putchar	1
+../Src/main.c:89:5:_write	2
+../Src/main.c:99:5:main	1

@@ -80,6 +80,21 @@ void usart2_print(char *str)
 	}
 }
 
+int __io_putchar(int ch)
+{
+	usart2_write_char((char)ch);
+	return ch;
+}
+
+int _write(int file, char *ptr, int len)
+{
+	for (int i=0; i < len; i++)
+	{
+		__io_putchar(*ptr++);
+	}
+	return len;
+}
+
 
 int main(void)
 {
@@ -89,14 +104,22 @@ int main(void)
 	GPIOA->MODER |=(1U<<(5*2));
 	usart2_tx_init();
 
+	int sayac = 0;
+	float voltaj = 3.3f;
+
+	printf("--- STM32F446RE Bare-Metal Printf Testi ---");
 
 	while(1)
 	{
 		GPIOA->BSRR = (1U << 5);
+		printf("Dongu : %d, LED Durumu Acik, Referans Voltaj: %.1f V \r\n", sayac, voltaj);
 		delay_ms(1000);
 
 		GPIOA->BSRR = (1U << (5+16));
+		printf("Dongu %d, LED Durumu kapali\r\n", sayac);
 		delay_ms(1000);
+
+		sayac++;
 	}
 	return 0;
 }
