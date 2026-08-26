@@ -28,7 +28,6 @@ void delay_ms(uint32_t ms)
 {
 	SysTick->LOAD = (16000-1);
 
-
 	SysTick->VAL=0;
 
 	SysTick->CTRL |= (1U<<0) | (1U<<2);
@@ -42,6 +41,8 @@ void delay_ms(uint32_t ms)
 	}
 	SysTick->CTRL = 0;
 }
+
+volatile uint32_t basma_sayisi = 0;
 
 void usart2_tx_init(void)
 {
@@ -95,31 +96,56 @@ int _write(int file, char *ptr, int len)
 	return len;
 }
 
+void pc13_kesme_init(void)
+{
+	RCC->AHB1ENR |= (1U << 2);
+	RCC->APB2ENR |= (1U << 14);
+
+	GPIOC->MODER &= ~(3U << (13*2));
+
+	SYSCFG->EXTICR[3] &= ~(0xFU << 4);
+	SYSCFG->EXTICR[3] |= (0x2U << 4);
+
+	EXTI->IMR |= (1U << 13);
+	EXTI->FTSR |= (1U << 13);
+
+	NVIC->ISER[1] = (1U << 8);
+
+	void EXTI15_10_IRQHandler(void)
+	{
+		if (EXTI->PR & (1U << 13))
+		{
+			EXTI->PR |= (1U << 13);
+
+			GPIOA->ODR ^=(1U << 5);
+
+			basma_sayisi++;
+		}
+	}
+}
 
 int main(void)
 {
 	RCC->AHB1ENR |= (1U<<0);
 
+
 	GPIOA->MODER &= ~(3U << (5*2));
 	GPIOA->MODER |=(1U<<(5*2));
 	usart2_tx_init();
+	pc13_kesme_init();
+	printf("-- Kesme islemi --\r\n");
+	printf("Butona basinca ana kod kesmeye gircek\r\n");
 
-	int sayac = 0;
-	float voltaj = 3.3f;
-
-	printf("--- STM32F446RE Bare-Metal Printf Testi ---");
+	uint32_t onceki_sayi = 0;
 
 	while(1)
 	{
-		GPIOA->BSRR = (1U << 5);
-		printf("Dongu : %d, LED Durumu Acik, Referans Voltaj: %.1f V \r\n", sayac, voltaj);
-		delay_ms(1000);
-
-		GPIOA->BSRR = (1U << (5+16));
-		printf("Dongu %d, LED Durumu kapali\r\n", sayac);
-		delay_ms(1000);
-
-		sayac++;
+		if (basma_sayisi != onceki_sayi)
+		{
+			printf("Butona basildi! Toplam %lu\r\n", basma_sayisi);
+			onceki_sayi = basma_sayisi;
+		}
 	}
 	return 0;
 }
+

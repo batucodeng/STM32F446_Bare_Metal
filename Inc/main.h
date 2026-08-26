@@ -12,8 +12,42 @@
 #define APB1PERIPH_BASE       (PERIPH_BASE + 0x00000000UL)
 #define USART2_BASE           (APB1PERIPH_BASE + 0x4400UL)
 #define USART2 			((USART_TypeDef *)USART2_BASE)
+#define APB2PERIPH_BASE       (PERIPH_BASE + 0x00010000UL)
+#define SYSCFG_BASE           (APB2PERIPH_BASE + 0x3800UL)
+#define EXTI_BASE             (PERIPH_BASE + 0x00013C00UL)
+#define NVIC_BASE             (0xE000E100UL)
+#define SYSCFG 		((SYSCFG_TypeDef *) SYSCFG_BASE)
+#define EXTI 		((EXTI_TypeDef *) EXTI_BASE)
+#define NVIC  		((NVIC_TypeDef *) NVIC_BASE)
+#define GPIOA_BASE            (AHB1PERIPH_BASE + 0x0000UL)
+#define GPIOC_BASE            (AHB1PERIPH_BASE + 0x0800UL) // <-- Burayı ekle
+#define GPIOA                 ((GPIO_TypeDef *) GPIOA_BASE)
+#define GPIOC                 ((GPIO_TypeDef *) GPIOC_BASE)
 
 
+typedef struct
+{
+	volatile uint32_t MEMRMP;
+	volatile uint32_t PMC;
+	volatile uint32_t EXTICR[4];
+	volatile uint32_t CMPCR;
+	volatile uint32_t CFGR;
+} SYSCFG_TypeDef;
+
+typedef struct
+{
+	volatile uint32_t IMR;
+	volatile uint32_t EMR;
+	volatile uint32_t RTSR;
+	volatile uint32_t FTSR;
+	volatile uint32_t SWIER;
+	volatile uint32_t PR;
+} EXTI_TypeDef;
+
+typedef struct
+{
+	volatile uint32_t ISER[8];
+}NVIC_TypeDef;
 
 typedef struct
 {
