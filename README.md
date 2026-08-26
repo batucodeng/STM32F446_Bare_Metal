@@ -24,11 +24,3 @@ Standart C kütüphanesi, __io_putchar ve _write fonksiyonları UART Data Regist
 SYSCFG multiplexer'ı üzerinden 13 numaralı kesme hattı Port C'ye bağlanmıştır.
 EXTI üzerinden falling edge tetiklemesi seçilmiştir.
 ARM NVIC denetleyicisinde EXTI15_10_IRQn kanalı yetkilendirilmiştir.
-
-
-
-│   └── main.c             # Çevre birimi sürücüleri, ISR ve ana uygulama
-├── Startup/
-│   └── startup_stm32f446retx.s # Vektör tablosu ve başlangıç assembly kodu
-├── .gitattributes         # GitHub dil istatistik yapılandırması
-└── README.md
