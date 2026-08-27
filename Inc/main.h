@@ -23,6 +23,28 @@
 #define GPIOC_BASE            (AHB1PERIPH_BASE + 0x0800UL) // <-- Burayı ekle
 #define GPIOA                 ((GPIO_TypeDef *) GPIOA_BASE)
 #define GPIOC                 ((GPIO_TypeDef *) GPIOC_BASE)
+#define TIM2_BASE             (APB1PERIPH_BASE + 0x0000UL)
+#define TIM2   ((TIM_TypeDef *) TIM2_BASE)
+
+
+typedef struct {
+    volatile uint32_t CR1;         /* 0x00: Kontrol Register 1 */
+    volatile uint32_t CR2;         /* 0x04: Kontrol Register 2 */
+    volatile uint32_t SMCR;        /* 0x08: Slave Mode Kontrol */
+    volatile uint32_t DIER;        /* 0x0C: DMA/Kesme İzinleri */
+    volatile uint32_t SR;          /* 0x10: Durum Register */
+    volatile uint32_t EGR;         /* 0x14: Olay Üretme */
+    volatile uint32_t CCMR1;       /* 0x18: Capture/Compare Mod 1 */
+    volatile uint32_t CCMR2;       /* 0x1C: Capture/Compare Mod 2 */
+    volatile uint32_t CCER;        /* 0x20: Capture/Compare Çıkış İzni */
+    volatile uint32_t CNT;         /* 0x24: Anlık Sayaç Değeri */
+    volatile uint32_t PSC;         /* 0x28: Ön Bölücü (Prescaler) */
+    volatile uint32_t ARR;         /* 0x2C: Sayaç Limiti (Auto-Reload) */
+    volatile uint32_t CCR1;        /* 0x30: Kanal 1 Eşik Değeri (Duty) */
+    volatile uint32_t CCR2;        /* 0x34: Kanal 2 Eşik Değeri */
+    volatile uint32_t CCR3;        /* 0x38: Kanal 3 Eşik Değeri */
+    volatile uint32_t CCR4;        /* 0x3C: Kanal 4 Eşik Değeri */
+} TIM_TypeDef;
 
 
 typedef struct

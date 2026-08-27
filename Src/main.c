@@ -124,26 +124,49 @@ void pc13_kesme_init(void)
 	}
 }
 
+void tim2_pwm_init(void)
+{
+	RCC->AHB1ENR |= (1U << 0); //GPIOA
+	RCC->APB1ENR |= (1U << 0); //TIM2
+
+	GPIOA->MODER &= ~(3U << (5 * 2));
+	GPIOA->MODER |= (2U << (5 * 2));
+
+	GPIOA->AFR[0] &= ~(0xFU << (5 * 4));
+	GPIOA->AFR[0] |= (1U << (5 * 4));
+
+	TIM2->PSC = 16-1; // 15MHZ PSC= Saat frekansını yavaslatır
+	TIM2->ARR = 1000 - 1; //Sayacın kaca kadar sayacagini sıfırlanacağını belirler
+
+	TIM2->CCMR1 &= ~(7U << 4);
+	TIM2->CCMR1 |= (6U << 4);
+
+	TIM2->CCMR1 |= (1U << 3);
+
+	TIM2->CCER |= (1U << 0);
+
+	TIM2->EGR |= (1U << 0);
+
+	TIM2->CCR1 = 0;
+
+	TIM2->CR1 |= (1U << 0);
+}
+
 int main(void)
 {
-	RCC->AHB1ENR |= (1U<<0);
-
-
-	GPIOA->MODER &= ~(3U << (5*2));
-	GPIOA->MODER |=(1U<<(5*2));
-	usart2_tx_init();
-	pc13_kesme_init();
-	printf("-- Kesme islemi --\r\n");
-	printf("Butona basinca ana kod kesmeye gircek\r\n");
-
-	uint32_t onceki_sayi = 0;
+	tim2_pwm_init();
 
 	while(1)
 	{
-		if (basma_sayisi != onceki_sayi)
+		for(int duty = 0; duty <= 1000; duty += 20)
 		{
-			printf("Butona basildi! Toplam %lu\r\n", basma_sayisi);
-			onceki_sayi = basma_sayisi;
+			TIM2->CCR1 = duty;
+			delay_ms(15);
+		}
+		for(int duty = 1000; duty>=0; duty-=20)
+		{
+			TIM2->CCR1 = duty;
+			delay_ms(15);
 		}
 	}
 	return 0;

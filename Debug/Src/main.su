@@ -5,4 +5,5 @@
 ../Src/main.c:84:5:__io_putchar	16	static
 ../Src/main.c:90:5:_write	32	static
 ../Src/main.c:99:6:pc13_kesme_init	16	static
-../Src/main.c:127:5:main	16	static
+../Src/main.c:127:6:tim2_pwm_init	4	static
+../Src/main.c:155:5:main	16	static
