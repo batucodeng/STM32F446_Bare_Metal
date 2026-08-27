@@ -24,3 +24,9 @@ Standart C kütüphanesi, __io_putchar ve _write fonksiyonları UART Data Regist
 SYSCFG multiplexer'ı üzerinden 13 numaralı kesme hattı Port C'ye bağlanmıştır.
 EXTI üzerinden falling edge tetiklemesi seçilmiştir.
 ARM NVIC denetleyicisinde EXTI15_10_IRQn kanalı yetkilendirilmiştir.
+
+6. Genel Amaçlı Zamanlayıcılar ve Donanımsal PWM
+PA5 pini AF1 alternatifi ile TIM2 Kanal 1 çıkışına bağladım.
+PSC ve ARR değerleri hesaplanarak 16 MHz ana saatten 1 kHz PWM frekansı elde ettim.
+TIM2_CCMR1 üzerinden PWM Mode 1 seçilmiş ve preload register aktif edildi.
+TIM2_CCR1 register değeri dinamik güncellenerek CPU yükü olmadan donanımsal Breathing LED parlaklık kontrolü sağlandı.
