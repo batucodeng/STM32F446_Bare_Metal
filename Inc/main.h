@@ -19,7 +19,7 @@
 #define USART2_BASE           (APB1PERIPH_BASE + 0x4400UL)
 #define SYSCFG_BASE           (APB2PERIPH_BASE + 0x3800UL)
 #define EXTI_BASE             (APB2PERIPH_BASE + 0x3C00UL)
-
+#define TIM2				  ((TIM_TypeDef*) TIM2_BASE)
 /* ARM Cortex-M4 Çekirdek Birimleri */
 #define SysTick_BASE          (0xE000E010UL)
 #define NVIC_BASE             (0xE000E100UL)

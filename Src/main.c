@@ -43,6 +43,7 @@ void usart2_init(void)
 
     USART2->BRR = 0x8B;
     USART2->CR1 = (1U << 3) | (1U << 13);
+
 }
 
 void usart2_write_char(char ch)
@@ -101,6 +102,23 @@ void EXTI15_10_IRQHandler(void)
     }
 }
 
+void tim2_init(void) {
+
+	RCC->APB1ENR |= (1U << 0);
+
+	TIM2->PSC = 1599;  /* 16 MHZ / 1600 = 10KHZ SAYMA FREKANSI */
+	TIM2->ARR = 9999;  /* 10000 ADIM = 1 SANIYE*/
+	TIM2->CNT = 0;     /* SAYACI SIFIRLA */
+
+	TIM2->CR1 |= (1U << 0);
+}
+
+void tim2_delay_1s(void) {
+	while (!(TIM2->SR & (1U << 0)));
+
+	TIM2->SR &= ~(1U << 0);
+}
+
 
 int main(void)
 {
@@ -108,6 +126,7 @@ int main(void)
     gpio_led_init();
     usart2_init();
     exti_pc13_init();
+    tim2_init();
 
     printf("   STM32 Bare-Metal Sistem Baslatildi   \r\n");
     printf("   PA5: Heartbeat LED (500ms Periyot)   \r\n");
@@ -123,7 +142,7 @@ int main(void)
             kesme_tetiklendi = 0;
         }
 
-        delay_ms(500);
+        tim2_delay_1s();
     }
 
     return 0;
