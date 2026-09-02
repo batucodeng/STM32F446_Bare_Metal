@@ -3,9 +3,7 @@
 
 #include <stdint.h>
 
-/* ========================================================================= */
-/* 1. BELLEK TABAN ADRESLERİ (MEMORY MAP)                                   */
-/* ========================================================================= */
+
 #define PERIPH_BASE           (0x40000000UL)
 #define APB1PERIPH_BASE       (PERIPH_BASE + 0x00000000UL)
 #define APB2PERIPH_BASE       (PERIPH_BASE + 0x00010000UL)
@@ -20,13 +18,9 @@
 #define SYSCFG_BASE           (APB2PERIPH_BASE + 0x3800UL)
 #define EXTI_BASE             (APB2PERIPH_BASE + 0x3C00UL)
 #define TIM2				  ((TIM_TypeDef*) TIM2_BASE)
-/* ARM Cortex-M4 Çekirdek Birimleri */
 #define SysTick_BASE          (0xE000E010UL)
 #define NVIC_BASE             (0xE000E100UL)
 
-/* ========================================================================= */
-/* 2. REGISTER STRUCT YAPILARI                                              */
-/* ========================================================================= */
 typedef struct {
     volatile uint32_t MODER;
     volatile uint32_t OTYPER;
@@ -116,9 +110,6 @@ typedef struct {
     volatile uint32_t ISER[8];
 } NVIC_TypeDef;
 
-/* ========================================================================= */
-/* 3. PERIPHERAL POINTER MAKROLARI                                          */
-/* ========================================================================= */
 #define GPIOA                 ((GPIO_TypeDef *) GPIOA_BASE)
 #define GPIOC                 ((GPIO_TypeDef *) GPIOC_BASE)
 #define RCC                   ((RCC_TypeDef *) RCC_BASE)

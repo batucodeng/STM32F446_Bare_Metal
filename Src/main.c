@@ -102,6 +102,15 @@ void EXTI15_10_IRQHandler(void)
     }
 }
 
+void TIM2_IRQHandler(void)
+{
+	if(TIM2->SR |= (1U << 0))
+	{
+		TIM2->SR &= ~(1U << 0);
+		GPIOA->ODR ^= (1U << 5);
+}
+}
+
 void tim2_init(void) {
 
 	RCC->APB1ENR |= (1U << 0);
@@ -110,6 +119,8 @@ void tim2_init(void) {
 	TIM2->ARR = 9999;  /* 10000 ADIM = 1 SANIYE*/
 	TIM2->CNT = 0;     /* SAYACI SIFIRLA */
 
+	TIM2->DIER |= (1U << 0);
+	NVIC->ISER[0] |= (1U << 28);
 	TIM2->CR1 |= (1U << 0);
 }
 
@@ -129,21 +140,16 @@ int main(void)
     tim2_init();
 
     printf("   STM32 Bare-Metal Sistem Baslatildi   \r\n");
-    printf("   PA5: Heartbeat LED (500ms Periyot)   \r\n");
-    printf("   PC13: EXTI Buton Kesmesi Devrede     \r\n");
+    printf("   PA5: TIM2 donanim kesmesi ile yanip soncek   \r\n");
 
     while (1)
     {
-        GPIOA->ODR ^= (1U << 5);
 
         if (kesme_tetiklendi)
         {
             printf("[KESME] Butona Basildi! Toplam Basma: %lu\r\n", buton_basma_sayisi);
             kesme_tetiklendi = 0;
         }
-
-        tim2_delay_1s();
     }
-
     return 0;
 }
