@@ -130,6 +130,38 @@ void tim2_delay_1s(void) {
 	TIM2->SR &= ~(1U << 0);
 }
 
+void tim2_pwm_init(void) {
+
+	RCC->AHB1ENR |= (1U << 0);
+	RCC->APB1ENR |= (1U << 0);
+
+	GPIOA->MODER &= ~(3U << (0*2));
+	GPIOA->MODER |= (2U << (0*2));
+
+	GPIOA->AFR[0] &= ~(0xFU << (0*4));
+	GPIOA->AFR[0] |= (1U << (0*4));
+
+	TIM2->PSC = 15;
+	TIM2->ARR = 999;
+	TIM2->CNT = 0;
+
+	TIM2->CCMR1 &= ~(7U << 4);
+	TIM2->CCMR1 |= (6U << 4);
+
+	TIM2->CCER |= (1U << 0);
+
+	TIM2->CCR1 = 0;
+
+	TIM2->CR1 |= (1U << 0);
+}
+
+void tim2_set_duty_cycle(uint32_t duty)
+{
+	if(duty > 999) duty = 999;
+	TIM2->CCR1 = duty;
+}
+
+
 
 int main(void)
 {
@@ -137,10 +169,10 @@ int main(void)
     gpio_led_init();
     usart2_init();
     exti_pc13_init();
-    tim2_init();
+    tim2_pwm_init();
 
     printf("   STM32 Bare-Metal Sistem Baslatildi   \r\n");
-    printf("   PA5: TIM2 donanim kesmesi ile yanip soncek   \r\n");
+    printf("   PA0: TIM2 Donanimsal PWM  \r\n");
 
     while (1)
     {
@@ -149,6 +181,18 @@ int main(void)
         {
             printf("[KESME] Butona Basildi! Toplam Basma: %lu\r\n", buton_basma_sayisi);
             kesme_tetiklendi = 0;
+        }
+
+        for(int i= 0; i<= 999; i+=20)
+        {
+        	tim2_set_duty_cycle(i);
+        	delay_ms(15);
+        }
+
+        for (int i = 999; i>= 0; i-=20)
+        {
+        	tim2_set_duty_cycle(i);
+        	delay_ms(15);
         }
     }
     return 0;

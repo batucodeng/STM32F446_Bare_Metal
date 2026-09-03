@@ -20,6 +20,7 @@
 #define TIM2				  ((TIM_TypeDef*) TIM2_BASE)
 #define SysTick_BASE          (0xE000E010UL)
 #define NVIC_BASE             (0xE000E100UL)
+#define TIM2 ((TIM_TypeDef *)TIM2_BASE)
 
 typedef struct {
     volatile uint32_t MODER;
