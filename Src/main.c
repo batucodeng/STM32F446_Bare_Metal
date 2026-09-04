@@ -161,39 +161,50 @@ void tim2_set_duty_cycle(uint32_t duty)
 	TIM2->CCR1 = duty;
 }
 
+void adc1_init(void)
+{
+	RCC->AHB1ENR |= (1U << 0);
+	RCC->APB2ENR |= (1U << 8);
+
+	GPIOA->MODER |= (3U << (1*2));
+
+	ADC1->SQR3 &= ~(0x1FU << 0);
+	ADC1->SQR3 |= (1U << 0);
+
+	ADC1->SQR1 |= ~(0xFU << 20);
+
+	ADC1->CR2 |= (1U << 0);
+}
+
+uint16_t adc1_read(void)
+{
+	ADC1->CR2 |= (1U << 30);
+	while(!(ADC1->SR & (1U << 1)));
+
+	return (uint16_t)(ADC1->DR);
+}
+
 
 
 int main(void)
 {
     systick_init();
-    gpio_led_init();
     usart2_init();
-    exti_pc13_init();
-    tim2_pwm_init();
+    adc1_init();
 
-    printf("   STM32 Bare-Metal Sistem Baslatildi   \r\n");
-    printf("   PA0: TIM2 Donanimsal PWM  \r\n");
+
+    printf("   STM32 Bare-Metal ADC1 Baslatildi   \r\n");
+    printf("   PA1: Analog Giris (0V - 3.3V)  \r\n");
 
     while (1)
     {
+    	uint16_t ham_deger = adc1_read();
 
-        if (kesme_tetiklendi)
-        {
-            printf("[KESME] Butona Basildi! Toplam Basma: %lu\r\n", buton_basma_sayisi);
-            kesme_tetiklendi = 0;
-        }
+    	uint32_t voltaj_mv = ((uint32_t)ham_deger * 3300) / 4095;
 
-        for(int i= 0; i<= 999; i+=20)
-        {
-        	tim2_set_duty_cycle(i);
-        	delay_ms(15);
-        }
+    	printf("ADC Ham: %4u | Voltaj: %4lu mV\r\n", ham_deger, voltaj_mv);
 
-        for (int i = 999; i>= 0; i-=20)
-        {
-        	tim2_set_duty_cycle(i);
-        	delay_ms(15);
-        }
+    	delay_ms(500);
     }
     return 0;
 }
