@@ -35,3 +35,6 @@ TIM2_CCR1 register değeri dinamik güncellenerek CPU yükü olmadan donanımsal
 Bellek taban adresleri, modül ofsetleri ve struct yapıları C derleme standartlarına uygun şekilde yukarıdan aşağıya hiyerarşik olarak yeniden düzenlenmiştir.
 Tip tanımlarının makrolardan önce gelmesi sağlanarak eksik tip ve çift adres tanımlama hataları giderilmiştir.
 RCC, GPIOA, GPIOC, TIM2, USART2, SysTick, SYSCFG, EXTI ve NVIC çevre birimlerine ait register haritaları donanım referans kılavuzuna birebir uygun hale getirilmiştir.
+
+8. Analog-Dijital Çevirici (ADC1) & Voltaj Okuma
+PA1 pini GPIO_MODER üzerinden Analog Mod'a alınarak ADC1 Kanal 1'e bağlandı. ADC_SQR3 ile tek kanallı çevrim sırası belirlendi ve ADC_CR2 üzerinden yazılımsal tetikleme (SWSTART) yapıldı. ADC_SR içerisindeki EOC bayrağı yoklanarak çevrim sonucu ADC_DR yazmacından 12-bit formatında okundu ve gerilim değerine dönüştürüldü.
